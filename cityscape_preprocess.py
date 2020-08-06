@@ -122,27 +122,4 @@ def parse_function(filenames, resize_to=[226, 226], augment=True):
       # if augment:
       #       image, gt = _augmentation_fn(image, gt)
     
-    return image, gt
-
-
-#map functions
-@tf.function
-def load_image_train(input_image,input_mask):
-  image_size_target=(IMAGE_SIZE[0],IMAGE_SIZE[1])
-  input_image = tf.image.resize(input_image, image_size_target)
-  input_mask = tf.image.resize(input_mask, image_size_target)
-  if USE_DATA_AUGMENTATION:
-      input_image,input_mask=do_technique_of_data_augmentation(input_image,input_mask)
-    
-  input_image, input_mask = normalize(input_image, input_mask)
-
-  return input_image, input_mask
-
-def load_image_test(input_image,input_mask):
-  image_size_target=(IMAGE_SIZE[0],IMAGE_SIZE[1])
-  input_image = tf.image.resize(input_image, image_size_target)
-  input_mask = tf.image.resize(input_mask, image_size_target)
-
-  input_image, input_mask = normalize(input_image, input_mask)
-
-  return input_image, input_mask
+    return {'image': image, 'segmentation_mask': gt}
