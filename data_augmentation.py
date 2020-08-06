@@ -35,7 +35,7 @@ def normalize(input_image, input_mask):
   input_mask -= 1  
   return input_image, input_mask
   
-def do_technique_of_data_augmentation(input_image,input_mask):
+def do_technique_of_data_augmentation(input_image,input_mask,list_of_data_augmentation_techniques,PROBABLITY_THRESHOLD):
   for technique,is_used in list_of_data_augmentation_techniques.items():
     function_name=str(technique)[4:].lower()
     if tf.random.uniform(()) > PROBABLITY_THRESHOLD and is_used:
