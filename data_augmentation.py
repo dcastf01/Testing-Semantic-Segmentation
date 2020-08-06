@@ -1,3 +1,4 @@
+import tensorflow as tf
 
 class data_augmentation():
 
