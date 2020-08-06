@@ -1,6 +1,7 @@
 
 import glob
 import functools
+import os
 
 CITYSCAPES_FOLDER="/content/dataset/cityscapes"
 CITYSCAPES_FILE_TEMPLATE=os.path.join('{root}', '{type}', '{split}', '{city}',
