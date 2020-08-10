@@ -1,3 +1,5 @@
+import tensorflow as tf
+
 from tensorflow.keras.layers import (Conv2D, Conv2DTranspose, Lambda, Dropout, 
                                      MaxPooling2D, LeakyReLU, concatenate, BatchNormalization)
 
