@@ -12,4 +12,4 @@ git clone https://github.com/dcastf01/cityscapesScripts.git
 pip install /content/cityscapesScripts
 pip install cityscapesscripts[gui]
 export CITYSCAPES_DATASET=/content/dataset/cityscapes
-python /content/cityscapesScripts/cityscapesscripts/preparation/createIdsLabelImgs.py
+python /content/cityscapesScripts/cityscapesscripts/preparation/createTrainIdLabelImgs.py
