@@ -9,7 +9,7 @@ CITYSCAPES_FILE_TEMPLATE=os.path.join('{root}', '{type}', '{split}', '{city}',
       '{city}_{seq:{filler}>{len_fill}}_{frame:{filler}>{len_fill}}_{type}{type2}{ext}')
 
 def get_cityscapes_file_pairs(split='train', city='*', sequence='*', 
-                              frame='*', ext='.*', gt_type='labelIds', type='leftImg8bit',
+                              frame='*', ext='.*', gt_type='labelTrainIds', type='leftImg8bit',
                               root_folder=CITYSCAPES_FOLDER, file_template=CITYSCAPES_FILE_TEMPLATE):
     """
     Fetch pairs of filenames for the Cityscapes dataset.
