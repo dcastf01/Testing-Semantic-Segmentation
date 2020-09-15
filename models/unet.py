@@ -1,6 +1,6 @@
 import tensorflow as tf
-
-from tensorflow.keras.layers import (Conv2D, Conv2DTranspose, Lambda, Dropout, 
+from tensorflow.keras.models import Model
+from tensorflow.keras.layers import (Conv2D, Conv2DTranspose, Lambda, Dropout, Input,
                                      MaxPooling2D, LeakyReLU, concatenate, BatchNormalization)
 
 
@@ -144,3 +144,18 @@ def unet(x, out_channels=3, layer_depth=4, filters_orig=32, kernel_size=4,activa
                padding='same', name='dec_output')(x)
 
     return x
+  
+  def unet_model( IMAGE_SIZE,INPUT_CHANNELS=3,out_channels=NUM_CLASSES, 
+                layer_depth=LAYERS_DEPTH, filters_orig=FILTERS_ORIG, 
+                kernel_size=KERNEL_SIZE, batch_norm=USE_BATCH_NORM,
+                final_activation="softmax"):
+  
+    inputs = Input(shape=(*IMAGE_SIZE, INPUT_CHANNELS), name='input')
+    outputs = unet(inputs, out_channels=NUM_CLASSES, 
+                  layer_depth=LAYERS_DEPTH, filters_orig=FILTERS_ORIG, 
+                  kernel_size=KERNEL_SIZE, batch_norm=USE_BATCH_NORM,
+                  final_activation="softmax" # we define our U-Net to output logits.
+                  )
+
+    model = Model(inputs, outputs)
+    return model
