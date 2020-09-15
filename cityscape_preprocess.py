@@ -55,12 +55,9 @@ def cityscapes_input_fn(split='train', root_folder=CITYSCAPES_FOLDER, resize_to=
     """
  
   input_files, gt_files = get_cityscapes_file_pairs(split=split, root_folder=root_folder)
-  return segmentation_input_fn(input_files, gt_files,
-                                 resize_to, shuffle, batch_size, num_epochs, augment, seed)
+  return segmentation_input_fn(input_files, gt_files, shuffle,  seed)
   
-def segmentation_input_fn(image_files, gt_files=None, resize_to=[256, 256],
-                        shuffle=False, batch_size=32, num_epochs=None, augment=False,
-                        seed=None):
+def segmentation_input_fn(image_files, gt_files=None, shuffle=False, seed=None):
   """
   Set up an input data pipeline for semantic segmentation applications.
   :param image_files:     List of input image files
