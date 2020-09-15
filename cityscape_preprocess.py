@@ -62,11 +62,7 @@ def segmentation_input_fn(image_files, gt_files=None, shuffle=False, seed=None):
   Set up an input data pipeline for semantic segmentation applications.
   :param image_files:     List of input image files
   :param gt_files:        (opt.) List of corresponding label image files
-  :param resize_to:       H x W Dimensions to resize the image and label to
   :param shuffle:         Flag to shuffle the dataset
-  :param batch_size:      Batch size
-  :param num_epochs:      Number of epochs the dataset would be iterated over
-  :param augment:         Flag to augment the pairs
   :param seed:            (opt) Seed
   :return:                tf.data.Dataset
   """
@@ -92,12 +88,10 @@ def segmentation_input_fn(image_files, gt_files=None, shuffle=False, seed=None):
 
   return dataset
 
-def parse_function(filenames, resize_to=[226, 226], augment=True):
+def parse_function(filenames):
     """
     Parse files into input/label image pair.
     :param filenames:   Dict containing the file(s) (filenames['image'], filenames['label'])
-    :param resize_to:   H x W Dimensions to resize the image and label to
-    :param augment:     Flag to augment the pair
     :return:            Input tensor, Label tensor
     """
     
