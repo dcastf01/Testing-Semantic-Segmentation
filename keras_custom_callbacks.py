@@ -24,7 +24,7 @@ import collections
 import math
 import tensorflow as tf
 import matplotlib.pyplot as plt
-from plot_utils import plot_image_grid, figure_to_summary
+from .plot_utils import plot_image_grid, figure_to_summary
 
 #==============================================================================
 # Class Definitions
