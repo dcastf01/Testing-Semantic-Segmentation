@@ -8,6 +8,8 @@ mv /content/gtFine_trainvaltest.zip dataset
 mkdir dataset/cityscapes
 unzip dataset/leftImg8bit_trainvaltest.zip -d /content/dataset/cityscapes
 unzip -o dataset/gtFine_trainvaltest.zip -d /content/dataset/cityscapes
+rm dataset/leftImg8bit_trainvaltest.zip
+rm dataset/gtFine_trainvaltest.zip
 git clone https://github.com/dcastf01/cityscapesScripts.git
 pip install /content/cityscapesScripts
 pip install cityscapesscripts[gui]
