@@ -31,7 +31,7 @@ import functools
 # Constant Definitions
 #==============================================================================
 
-CITYSCAPES_FOLDER = os.path.expanduser('~/datasets/cityscapes')
+CITYSCAPES_FOLDER = "/content/dataset/cityscapes"
 
 CITYSCAPES_IGNORE_VALUE     = 255
 CITYSCAPES_LABELS           = [label for label in cityscapes_labels.labels
