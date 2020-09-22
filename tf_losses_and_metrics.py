@@ -21,7 +21,7 @@ from __future__ import division
 from __future__ import print_function
 
 import tensorflow as tf
-from tf_math import log_n, binary_outline
+from .tf_math import log_n, binary_outline
 
 #==============================================================================
 # Constant Definitions
@@ -245,55 +245,80 @@ def mean_iou_metric(num_classes, ignore_value=255):
 #  LOSS/METRIC CLASSES
 # -----------------------------------------------------------------------------
 
-class SegmentationAccuracy(tf.metrics.Accuracy):
-    def __init__(self, ignore_value=255, name='acc', dtype=None):
-        super().__init__(name=name, dtype=dtype)
-        self.ignore_value = ignore_value
+class SegmentationAccuracy(tf.keras.metrics.Accuracy):
+    def __init__(self, name='acc',ignore_value=CITYSCAPES_IGNORE_VALUE, **kwargs):
+      super(SegmentationAccuracy, self).__init__(name=name, **kwargs)
+      self.ignore_value = ignore_value
 
-    def __call__(self, y_true, y_pred, sample_weight=None):
-        num_classes = y_pred.shape[-1]
-        y_true, y_pred = prepare_data_for_segmentation_loss(y_true, y_pred,
-                                                            num_classes=num_classes, 
-                                                            ignore_value=self.ignore_value)
-        # And since tf.metrics.Accuracy needs the label maps, not the one-hot versions,
-        # we adapt accordingly:
-        y_pred = tf.argmax(y_pred, axis=-1)
-        
-        return super().__call__(y_true, y_pred, sample_weight)
+    def update_state(self, y_true, y_pred, sample_weight=None):
+      num_classes = y_pred.shape[-1]
+
+      y_true, y_pred = prepare_data_for_segmentation_loss(y_true, y_pred,
+                                                          num_classes=num_classes, 
+                                                          ignore_value=self.ignore_value)
+      y_pred = tf.argmax(y_pred, axis=-1)
+      
+      super().update_state(y_true, y_pred, sample_weight=None)
+      
+    def result(self):
+      return super().result()
+
+    def reset_states(self):
+      # The state of the metric will be reset at the start of each epoch.
+      super().reset_states()
 
 
-class SegmentationMeanIoU(tf.metrics.MeanIoU):
-    def __init__(self, num_classes, ignore_value=255, name='mIoU', dtype=None):
-        super().__init__(num_classes=num_classes, name=name, dtype=dtype)
-        self.ignore_value = ignore_value
-        self.num_classes = num_classes
+class SegmentationMeanIoU(tf.keras.metrics.MeanIoU):
+    def __init__(self, num_classes,ignore_value=CITYSCAPES_IGNORE_VALUE,name='mIoU', **kwargs):
+      super(SegmentationMeanIoU, self).__init__(num_classes=num_classes,name=name, **kwargs)
+      self.num_classes=num_classes   
+      self.ignore_value = ignore_value 
 
-    def __call__(self, y_true, y_pred, sample_weight=None):
-        y_true, y_pred = prepare_data_for_segmentation_loss(y_true, y_pred,
+    def update_state(self, y_true, y_pred, sample_weight=None):
+      
+      y_true, y_pred = prepare_data_for_segmentation_loss(y_true, y_pred,
                                                             num_classes=self.num_classes, 
                                                             ignore_value=self.ignore_value)
         # And since tf.metrics.mean_iou() needs the label maps, not the one-hot versions,
         # we adapt accordingly:
-        y_pred = tf.argmax(y_pred, axis=-1)
-        
-        return super().__call__(y_true, y_pred, sample_weight)    
+      y_pred = tf.argmax(y_pred, axis=-1)
+
+      super().update_state(y_true, y_pred, sample_weight=None)
+      
+    def result(self):
+      return super().result()
+
+    def reset_states(self):
+      # The state of the metric will be reset at the start of each epoch.
+      super().reset_states()    
 
 
 class SegmentationLoss(tf.losses.SparseCategoricalCrossentropy):
-    def __init__(self, ignore_value=255, 
+    def __init__(self, ignore_value=CITYSCAPES_IGNORE_VALUE, 
                  from_logits=False, reduction=tf.losses.Reduction.SUM_OVER_BATCH_SIZE, name='loss'):
         super().__init__(from_logits=from_logits, reduction=reduction, name=name)
         self.ignore_value = ignore_value
     
     def _prepare_data(self, y_true, y_pred):
+
         num_classes = y_pred.shape[-1]
+
         y_true, y_pred = prepare_data_for_segmentation_loss(y_true, y_pred,
                                                             num_classes=num_classes, 
                                                             ignore_value=self.ignore_value)
+        # unique, counts = np.unique(tf.math.round(y_true), return_counts=True)
+        # print("y_true",dict(zip(unique, counts)))
+        # unique, counts = np.unique(tf.math.round(y_pred), return_counts=True)
+        # print("y_pred",dict(zip(unique, counts)))
+
+        # print(y_true.shape,"y_true shape")
+        # print(y_pred.shape,"y_pred shape")
         return y_true, y_pred
     
     def __call__(self, y_true, y_pred, sample_weight=None):
+ 
         y_true, y_pred = self._prepare_data(y_true, y_pred)
+
         loss = super().__call__(y_true, y_pred, sample_weight)
         return loss
 
