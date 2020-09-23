@@ -1,4 +1,5 @@
-
+if [ ! -d "dataset/cityscapes" ]; then
+    # Control will enter here if $DIRECTORY doesn't exist.
 wget --keep-session-cookies --save-cookies=cookies.txt --post-data 'username=dacasfal@upv.es&password=testeando02&submit=Login' https://www.cityscapes-dataset.com/login/
 wget --load-cookies cookies.txt --content-disposition https://www.cityscapes-dataset.com/file-handling/?packageID=1 #imagen etiquetada
 wget --load-cookies cookies.txt --content-disposition https://www.cityscapes-dataset.com/file-handling/?packageID=3 #imagenes reales 
@@ -15,3 +16,5 @@ pip install /content/cityscapesScripts
 pip install cityscapesscripts[gui]
 export CITYSCAPES_DATASET=/content/dataset/cityscapes
 python /content/cityscapesScripts/cityscapesscripts/preparation/createTrainIdLabelImgs.py
+
+fi
